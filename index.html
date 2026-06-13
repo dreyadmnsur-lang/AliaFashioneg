@@ -682,30 +682,28 @@ footer .footer-brand{font-size:1.1rem;font-weight:900;margin-bottom:4px;color:va
 
 <style>
 /* ===== Checkout Responsive System ===== */
-.co-sheet{max-width:680px;padding:0 !important;overflow:hidden}
+.co-sheet{max-width:680px;padding:0 !important;overflow:hidden;max-height:90dvh;display:flex;flex-direction:column}
+.co-sheet>div:last-child{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
 .co-field{display:flex;flex-direction:column;gap:4px}
 .co-label{font-size:clamp(.75rem,.82rem + .1vw,.9rem);color:#666;font-weight:600;text-align:right}
 .co-input{
-  padding:clamp(.55rem,.72rem,.85rem) clamp(.7rem,1rem,1.2rem);
+  padding:.65rem 1rem;
   border-radius:10px;border:1.5px solid #e0e0e0;background:#fff;
   font-family:'Cairo',sans-serif;
-  font-size:clamp(.85rem,.92rem,.98rem);
+  font-size:16px; /* منع zoom على iOS */
   transition:.15s;width:100%;
-  /* منع zoom على iOS عند focus */
-  font-size:max(.85rem, 16px);
 }
 .co-input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(26,24,20,.08)}
 
 /* الـ checkout modal نفسه يتكيف مع أي شاشة */
 #checkoutModal .sheet{
-  max-width:min(680px, 100vw);
+  max-width:min(680px, calc(100vw - 24px));
   width:100%;
   padding:0;
-  overflow:hidden;
   margin:auto;
 }
 #checkoutModal{
-  padding:clamp(0px, 2vw, 16px);
+  padding:12px;
   align-items:center;
 }
 
@@ -721,6 +719,29 @@ footer .footer-brand{font-size:1.1rem;font-weight:900;margin-bottom:4px;color:va
   grid-template-columns:repeat(auto-fit, minmax(min(120px, 100%), 1fr));
   gap:12px;
   margin-top:12px;
+}
+
+/* على التابلت - centered مع scroll */
+@media(min-width:601px) and (max-width:900px){
+  #checkoutModal{
+    padding:12px;
+    align-items:center;
+  }
+  #checkoutModal .sheet{
+    max-height:88dvh;
+    display:flex;
+    flex-direction:column;
+  }
+  #checkoutModal .sheet > div:first-child{
+    flex-shrink:0;
+    position:sticky;top:0;background:#fff;z-index:2;
+  }
+  #checkoutModal .sheet > div:last-child{
+    overflow-y:auto;
+    flex:1;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+  }
 }
 
 /* على الموبايل يتحول لـ sheet من تحت */
