@@ -370,7 +370,7 @@ footer .footer-brand{font-size:1.1rem;font-weight:900;margin-bottom:4px;color:va
 <body>
 
 <!-- Announcement Bar -->
-<div id="announcementBar">
+<div id="announcementBar" style="display:none">
   <div style="overflow:hidden;flex:1;display:flex">
     <div class="ann-ticker" id="annTicker">
       <span>🌟 خصم 20% على كل العبايات الصيفي هذا الأسبوع</span>
@@ -1256,7 +1256,14 @@ function sendOrderWhatsApp(){
   lines.push('');
   lines.push('📦 رسوم الشحن: '+lastOrder.shippingFee+' ج');
   lines.push('💰 الإجمالي: '+lastOrder.total+' ج.م');
-  openWhatsApp(lines.join('\n'));
+  // Send to Telegram bot silently
+  const TELEGRAM_TOKEN='8976860183:AAGwK_HlByjkcWbwk_l-5LpR5AtzuOBn8WI';
+  const TELEGRAM_CHAT_ID='820609839';
+  fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({chat_id:TELEGRAM_CHAT_ID,text:lines.join('\n')})
+  }).catch(()=>{});
 }
 
 // ===== Tabs =====
