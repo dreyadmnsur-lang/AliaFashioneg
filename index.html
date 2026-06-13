@@ -564,7 +564,7 @@ footer .footer-brand{font-size:1.1rem;font-weight:900;margin-bottom:4px;color:va
 
 <!-- Checkout Modal -->
 <div class="modal" id="checkoutModal">
-<div class="sheet" style="max-width:680px;padding:0;overflow:hidden">
+<div class="sheet co-sheet">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #eee">
     <div style="font-size:1.2rem;font-weight:900">Alia Fashion</div>
     <button class="btn ghost" id="checkoutClose" style="padding:.4rem .8rem">✕</button>
@@ -575,13 +575,13 @@ footer .footer-brand{font-size:1.1rem;font-weight:900;margin-bottom:4px;color:va
       <span class="co-label">المنطقة</span>
       <div style="padding:.75rem 1rem;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:10px;color:#444;font-size:.93rem">مصر</div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+    <div class="co-names-grid">
       <div class="co-field"><span class="co-label">الاسم الأول</span><input type="text" id="checkoutFirstName" placeholder="الاسم الأول" class="co-input"></div>
       <div class="co-field"><span class="co-label">الاسم الأخير</span><input type="text" id="checkoutLastName" placeholder="الاسم الأخير" class="co-input"></div>
     </div>
     <div class="co-field" style="margin-top:12px"><span class="co-label">العنوان</span><input type="text" id="checkoutAddress" placeholder="الشارع والرقم" class="co-input"></div>
     <div class="co-field" style="margin-top:12px"><span class="co-label">الشقة / الدور (اختياري)</span><input type="text" id="checkoutApt" placeholder="شقة، دور، مبنى..." class="co-input"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px">
+    <div class="co-city-grid">
       <div class="co-field"><span class="co-label">المدينة</span><input type="text" id="checkoutCity" placeholder="المدينة" class="co-input"></div>
       <div class="co-field"><span class="co-label">المحافظة</span>
         <select id="checkoutProvince" class="co-input" style="appearance:auto">
@@ -638,10 +638,98 @@ footer .footer-brand{font-size:1.1rem;font-weight:900;margin-bottom:4px;color:va
 </div>
 
 <style>
+/* ===== Checkout Responsive System ===== */
+.co-sheet{max-width:680px;padding:0 !important;overflow:hidden}
 .co-field{display:flex;flex-direction:column;gap:4px}
-.co-label{font-size:.82rem;color:#666;font-weight:600;text-align:right}
-.co-input{padding:.72rem 1rem;border-radius:10px;border:1.5px solid #e0e0e0;background:#fff;font-family:'Cairo',sans-serif;font-size:.92rem;transition:.15s;width:100%}
+.co-label{font-size:clamp(.75rem,.82rem + .1vw,.9rem);color:#666;font-weight:600;text-align:right}
+.co-input{
+  padding:clamp(.55rem,.72rem,.85rem) clamp(.7rem,1rem,1.2rem);
+  border-radius:10px;border:1.5px solid #e0e0e0;background:#fff;
+  font-family:'Cairo',sans-serif;
+  font-size:clamp(.85rem,.92rem,.98rem);
+  transition:.15s;width:100%;
+  /* منع zoom على iOS عند focus */
+  font-size:max(.85rem, 16px);
+}
 .co-input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(26,24,20,.08)}
+
+/* الـ checkout modal نفسه يتكيف مع أي شاشة */
+#checkoutModal .sheet{
+  max-width:min(680px, 100vw);
+  width:100%;
+  padding:0;
+  overflow:hidden;
+  margin:auto;
+}
+#checkoutModal{
+  padding:clamp(0px, 2vw, 16px);
+  align-items:center;
+}
+
+/* الـ grids تتكيف أوتوماتيك */
+.co-names-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(min(160px, 100%), 1fr));
+  gap:12px;
+  margin-top:12px;
+}
+.co-city-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(min(120px, 100%), 1fr));
+  gap:12px;
+  margin-top:12px;
+}
+
+/* على الموبايل يتحول لـ sheet من تحت */
+@media(max-width:600px){
+  #checkoutModal{
+    padding:0;
+    align-items:flex-end;
+  }
+  #checkoutModal .sheet{
+    border-radius:20px 20px 0 0;
+    max-height:92dvh;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  /* الـ header والـ padding يصغر */
+  #checkoutModal .sheet > div:first-child{
+    padding:14px 16px !important;
+    position:sticky;top:0;background:#fff;z-index:2;
+  }
+  #checkoutModal .sheet > div:nth-child(2){
+    padding:16px !important;
+  }
+  /* الأسماء عمودين صغيرين أو عمود واحد */
+  .co-names-grid{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  /* المدينة والمحافظة والبريد عمودين بدل 3 */
+  .co-city-grid{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .co-city-grid .co-field:last-child{
+    grid-column:1/-1;
+  }
+  .co-input{
+    padding:.6rem .85rem;
+    font-size:16px; /* منع zoom على iOS */
+  }
+}
+
+/* شاشات صغيرة جداً */
+@media(max-width:360px){
+  .co-names-grid,
+  .co-city-grid{
+    grid-template-columns:1fr;
+    gap:8px;
+  }
+  .co-city-grid .co-field:last-child{
+    grid-column:auto;
+  }
+}
 </style>
 
 <!-- Thank You Page -->
